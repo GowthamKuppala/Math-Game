@@ -6,25 +6,34 @@ const apiRouter = require('./routes/api');
 const setupSocket = require('./socket');
 
 const PORT = process.env.PORT || 3001;
-const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:5173';
 
 const app = express();
 const server = http.createServer(app);
 
+// Allow ALL origins — this is a public game app with no sensitive data
+const corsOptions = {
+  origin: '*',
+  methods: ['GET', 'POST', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+};
+
 const io = new Server(server, {
-  cors: {
-    origin: FRONTEND_URL,
-    methods: ['GET', 'POST'],
-  },
+  cors: { origin: '*', methods: ['GET', 'POST'] },
 });
 
 // ─── Middleware ───────────────────────────────────────────────────────────────
-app.use(cors({ origin: FRONTEND_URL }));
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions)); // handle preflight requests
 app.use(express.json());
 
 // ─── Routes ──────────────────────────────────────────────────────────────────
 app.get('/', (req, res) => {
-  res.json({ app: 'MATHZONE Backend', status: 'running', api: '/api' });
+  res.json({
+    app: 'MATHZONE Backend',
+    status: 'running',
+    api: '/api',
+    endpoints: ['/api/health', '/api/leaderboard', '/api/profile/:username', '/api/sessions/:username'],
+  });
 });
 
 app.use('/api', apiRouter);
