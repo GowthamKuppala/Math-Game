@@ -23,8 +23,8 @@ const io = new Server(server, {
 
 // ─── Middleware ───────────────────────────────────────────────────────────────
 app.use(cors(corsOptions));
-app.options('*', cors(corsOptions)); // handle preflight requests
 app.use(express.json());
+
 
 // ─── Routes ──────────────────────────────────────────────────────────────────
 app.get('/', (req, res) => {
