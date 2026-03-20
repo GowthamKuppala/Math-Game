@@ -23,6 +23,10 @@ app.use(cors({ origin: FRONTEND_URL }));
 app.use(express.json());
 
 // ─── Routes ──────────────────────────────────────────────────────────────────
+app.get('/', (req, res) => {
+  res.json({ app: 'MATHZONE Backend', status: 'running', api: '/api' });
+});
+
 app.use('/api', apiRouter);
 
 app.get('/api/health', (req, res) => {
